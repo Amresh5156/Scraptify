@@ -1,9 +1,7 @@
 const express = require("express");
-const { generateNotes } = require("../controllers/notes.controller.js");
+const { createNotes } = require("../controllers/notes.controller.js");
 
 const router = express.Router();
-
-
-router.post("/generate", generateNotes);
+router.post("/generate", createNotes);
 
 module.exports = router;

@@ -67,7 +67,8 @@
   margin-bottom: var(--space-1);
   transition: background var(--transition-fast), color var(--transition-fast);
 }
-.history-item:hover, .history-item.active {
+.history-item:hover,
+.history-item.active {
   background: #313131;
   color: #fff;
 }
@@ -105,8 +106,12 @@
   box-sizing: border-box;
   margin-bottom: var(--space-3);
   outline: none;
-  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast), height 0.4s ease;
 }
+/* The duplicate .note-input selector below was redundant and has been merged via transition above */
+/* .note-input {
+  transition: 0.4s ease;
+} */
 .note-input:focus {
   border-color: #fff;
   box-shadow: var(--color-focus-ring);
@@ -124,6 +129,40 @@
 }
 .gen-note-btn:hover {
   background: var(--color-primary-hover);
+}
+
+.panel-shrink {
+  flex: 0.6;
+  transition: flex 0.4s ease;
+}
+
+.input-small {
+  height: 120px !important;
+}
+
+/* PDF side panel */
+.pdf-folder {
+  flex: 0.4;
+  background: #f9fafb;
+  border-left: 1px solid #ddd;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+.pdf-folder iframe {
+  flex: 1;
+  border: none;
+  margin-top: 10px;
+}
+
+.download-pdf-btn {
+  margin-top: 10px;
+  padding: 10px;
+  background: black;
+  color: white;
+  border-radius: 6px;
+  border: none;
 }
 
 @media (max-width: 700px) {

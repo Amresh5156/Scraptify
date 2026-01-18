@@ -14,6 +14,7 @@ app.use(cors({
 }))
 app.use('/api/auth', authRouter)
 app.use("/api/notes", notesRoutes);
+app.get('/test', (req, res) => res.send('Working!'));
 
 
 

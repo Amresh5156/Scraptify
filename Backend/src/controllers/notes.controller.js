@@ -1,22 +1,16 @@
-const notesModel = require("../model/notes.model")
+const { generateNoteContent } = require("../services/ai.service.js");
+const { generateHandwrittenNotes } = require("../services/handwriting.service.js");
 
+const createNotes = async (req, res) => {
+  const { question } = req.body;
 
-async function generateNotes(req, res){
+  const answer = await generateNoteContent(question);
+  const handwritten = await generateHandwrittenNotes(answer);
 
-    const {title} = req.body
+  res.json({
+    answer,
+    handwritten
+  });
+};
 
-    
-    const notes = await notesModel.create({
-        user: req.user._id,
-        title,
-        content
-    })
-
-    res.status(201).json({
-        message: "Notes created successfully",
-        notes
-    })
-    
-}
-
-module.exports = { generateNotes }
+module.exports = { createNotes };
