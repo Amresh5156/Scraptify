@@ -4,3 +4,4 @@ node_modules
 *.ttf
 *.jpg
 *.txt
+output/
