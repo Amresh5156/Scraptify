@@ -23,7 +23,7 @@ function buildSVG(text) {
         .t {
           font-family: 'Handwriting';
           font-size: 48px;
-          fill: #111827;
+          fill:rgb(0, 0, 0);
         }
       </style>
     </defs>
@@ -48,19 +48,40 @@ function buildSVG(text) {
 }
 
 async function generateHandwrittenNotes(text) {
+  if (!fs.existsSync(OUTPUT_DIR)) fs.mkdirSync(OUTPUT_DIR);
 
-  const svg = buildSVG(text);
-  const imagePath = path.join(OUTPUT_DIR, "handwritten.png");
+  const rawPages = text.split("[PAGE_BREAK]");
+  const imagePaths = [];
 
-  await sharp(Buffer.from(svg)).png().toFile(imagePath);
+  for (let i = 0; i < rawPages.length; i++) {
+    const pageText = rawPages[i].trim();
+    const svg = buildSVG(pageText);
+    const imgPath = path.join(OUTPUT_DIR, `page-${i}.png`);
+
+    await sharp(Buffer.from(svg)).png().toFile(imgPath);
+    imagePaths.push(imgPath);
+  }
 
   const pdfPath = path.join(OUTPUT_DIR, "handwritten.pdf");
-  const pdf = new PDFDocument({ size: "A4" });
-  pdf.pipe(fs.createWriteStream(pdfPath));
-  pdf.image(imagePath, { fit: [595, 842] });
-  pdf.end();
 
-  return { imagePath, pdfPath };
+  await new Promise((resolve) => {
+    const pdf = new PDFDocument({ size: "A4" });
+    const stream = fs.createWriteStream(pdfPath);
+
+    pdf.pipe(stream);
+
+    imagePaths.forEach((img, index) => {
+      if (index !== 0) pdf.addPage();
+      pdf.image(img, { fit: [595, 842] });
+    });
+
+    pdf.end();
+    stream.on("finish", resolve);
+  });
+
+  return { pdfPath };
 }
+
+
 
 module.exports = { generateHandwrittenNotes };
